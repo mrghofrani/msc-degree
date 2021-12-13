@@ -73,30 +73,8 @@ $\sqrt{n}$ یک مقدار خوب برای $k$ است. اما در حالت کل
 
 \section*{سوال دو}
 
-الگوریتم درخت تصمیم‌گیر نسبت به الگوریتم \lr{KNN} مولدتر\LTRfootnote{Generative} است. برای مثال درخت تصمیمی
-را که در شکل \ref{decision-tree-example} آورده شده است در نظر بگیرید. این درخت خانه‌هایی را که ارزش خرید
-بالایی دارند را تفکیک می‌کند. با توجه به شکل و بدون دانستن داده‌هایی که درخت بر اساس آن‌ها دسته‌بندی را انجام داده
-است، می‌توان خانه‌های جدیدی را که ارزش خرید بالایی دارند را تولید کرد.
-
-\begin{figure}[h]
-    \centering
-    \includegraphics[scale=0.4]{images/q2/decision-tree.png}
-    \caption{نمونه‌ای از درخت تصمیم‌گیر}
-    \label{decision-tree-example}
-\end{figure}
-
-اما همان‌طور که اشاره کردیم، الگوریتم \lr{KNN} یک الگوریتم \lr{Discriminative} است. برای نشان دادن این مطلب
-از مثال قبلی کمک می‌گیریم. فرض کنیم درخت تصمیم بر اساس داده‌های موجود در شکل \ref{sample} ساخته شده باشد.
-حال همین داده‌ها را به الگوریتم \lr{KNN} داده و از او می‌خواهیم که برچسب نقطه سیاه‌رنگ موجود در شکل را برچسب‌گذاری
-کند. این الگوریتم با مقایسه‌ی این داده با داده‌های دیگر می‌تواند این داده را به درستی برچسب بزند، اما نمی‌تواند
-داده‌های جدیدی که متعلق به یکی از کلاس‌ها است را بدون مقایسه کردن داده جدید با داده‌های قبلی به دست آورد.
-
-\begin{figure}[h]
-    \centering
-    \includegraphics[scale=0.4]{images/q2/samples.png}
-    \caption{داده‌های آموزشی به همراه داده‌ی برچسب نخورده}
-    \label{sample}
-\end{figure}
+هر دو الگوریتم \lr{KNN} و درخت تصمیم از نوع الگوریتم‌های تمایزگر هستند چرا که با مقایسه‌ی داده‌ها با یکدیگر
+سعی می‌کنند یک مرز تصمیم بین داده‌های از کلاس‌های مختلف پیدا کنند.
 
 \section*{سوال سه}
 
@@ -114,6 +92,45 @@ $$\sigma(a) = \frac{1}{1+e^{-a}}$$
     & = & \frac{1}{1+e^{-a}} \times (1 - \frac{1}{1+e^{-a}}) \\
     & = & \sigma(a) (1-\sigma(a)) \\
 \end{eqnarray*}
+
+\subsection*{قسمت ب}
+
+داریم.
+
+\begin{eqnarray*}
+    y^{(i)} = 1 & \Longrightarrow & f_{i1} = -\ln(p(c_1|x^{(i)})) = -\ln(\sigma(w^Tx^i)) = - \ln(\hat{y}^i) \\
+    y^{(i)} = 0 & \Longrightarrow & f_{i2} = -\ln(p(c_0|x^{(i)})) = -\ln(1-\sigma(w^Tx^i)) = - \ln(1-\hat{y}^i)
+\end{eqnarray*}
+\begin{eqnarray*}
+     \longrightarrow f_i & = & f_{i1} + f_{i2} \\
+     & = & - y^i \ln(\hat{y}^i) +(1-y^i)\ln(1-\hat{y}^i)
+\end{eqnarray*}
+\begin{eqnarray*}
+     f & = & \sum_{i=1}^{n} f_{i} \\
+     & = & - \sum_{i=1}^{n} y^i \ln(\hat{y}^i) +(1-y^i)\ln(1-\hat{y}^i)
+\end{eqnarray*}
+
+\subsection*{قسمت ج}
+
+با مشتق‌گیری از عبارت بالا خواهیم داشت.
+
+\begin{eqnarray*}
+    \frac{df}{dw} & = & \sum_{i=1}^{n} \frac{df_{i}}{dw} \\
+    & = & - \sum_{i=1}^{n} \frac{df_{i1}}{dw} + \frac{df_{i2}}{dw}
+\end{eqnarray*}
+\begin{eqnarray*}
+    \frac{df_{i1}}{dw} & = & \frac{d(-\ln(\hat{y}^i)))}{dw} = -(1-\hat{y}^i)x^i =  -(y^i - \hat{y}^i)x^i\\
+    \frac{df_{i2}}{dw} & = & \frac{d(-\ln(1-y^i))}{dw} = \hat{y}^ix^i = -(0 - y^i)x^i = -(y^i - \hat{y}^i)x^i
+\end{eqnarray*}
+\begin{eqnarray*}
+    \frac{df}{dw} = -\sum_{i=1}^{n} -(y^i - \hat{y}^i)x^i -(y^i - \hat{y}^i)x^i = \sum_{i=1}^{n} (y^i - \hat{y}^i)x^i
+\end{eqnarray*}
+
+\subsection*{قسمت د}
+
+در این حالت از آن جا که چندین صفحه متمایز قادر به جداسازی کلاس‌ها از یکدیگر است بنابراین
+الگوریتم \lr{logistic regression} نمی‌تواند یک جواب یکتا برای مسئله پیدا کند. در این حالت
+در هر مرحله الگوریتم جواب خود را تغییر داده و به عبارتی دچار ناپایداری می‌شود.
 
 \section*{سوال چهار}
 
@@ -322,6 +339,126 @@ $$\sigma(a) = \frac{1}{1+e^{-a}}$$
 و \ref{question5-partc} رسم شده است.
 
 \section*{سوال‌های پیاده‌سازی}
+
+\section*{سوال یک}
+
+در این سوال داده‌ها با نسبت ۸۰ به ۲۰ جدا شده‌اند یعنی ۸۰ درصد داده‌ها برای آموزش و ۲۰ درصد
+برای تست مدل در نظر گرفته شده است.
+
+\subsection*{قسمت الف}
+
+نتایج مربوط به داده‌های تست و آموزش در جدول \ref{implementation-q1-parta-metrics}
+آورده شده است.
+
+\begin{latin}
+\begin{table}[h]
+    \centering
+    \caption{\rl{نتایج ارزیابی مدل بر روی داده‌های تست و آموزش، سوال یک قسمت یک}}
+    \begin{tabular}{c|c|c|c|c|c|c|c}
+        \multicolumn{4}{c|}{Train} & \multicolumn{4}{|c}{Test} \\
+        \hline
+        Precision & Recall & F1 & Accuracy & Precision & Recall & F1 & Accuracy \\
+        \hline
+        0.855 & 0.876 & 0.865 & 0.86 & 0.845 & 0.869 & 0.857 & 0.848
+    \end{tabular}
+    \label{implementation-q1-parta-metrics}
+\end{table}
+\end{latin}
+
+\subsection*{قسمت ب}
+
+نتایج مربوط به داده‌های تست و آموزش در جدول \ref{implementation-q1-partb-metrics}
+آورده شده است.
+
+\begin{latin}
+\begin{table}[h]
+    \centering
+    \caption{\rl{نتایج ارزیابی مدل بر روی داده‌های تست و آموزش، سوال یک قسمت دو}}
+    \begin{tabular}{c|c|c|c|c|c|c|c}
+        \multicolumn{4}{c|}{Train} & \multicolumn{4}{|c}{Test} \\
+        \hline
+        Precision & Recall & F1 & Accuracy & Precision & Recall & F1 & Accuracy \\
+        \hline
+        0.824 & 0.885 & 0.854 & 0.845 & 0.807 & 0.867 & 0.836 & 0.824
+    \end{tabular}
+    \label{implementation-q1-partb-metrics}
+\end{table}
+\end{latin}
+
+\subsection*{قسمت ج}
+
+نتایج مربوط به داده‌های تست و آموزش در جدول \ref{implementation-q1-partc-chol-metrics} با حذف ستون
+\lr{chol} آورده شده است. با مقایسه نتایج این جدول با قسمت ب مشاهده می‌شود که
+نتایج بر روی داده‌های آموزشی اندکی بهتر شده است اما
+حتی برخی از معیار‌های مربوط به داده‌های تست اندکی افت کرده است.
+
+\begin{latin}
+\begin{table}[h]
+    \centering
+    \caption{\rl{نتایج ارزیابی مدل بر روی داده‌های تست و آموزش، سوال یک قسمت ج}}
+    \begin{tabular}{c|c|c|c|c|c|c|c}
+        \multicolumn{4}{c|}{Train} & \multicolumn{4}{|c}{Test} \\
+        \hline
+        Precision & Recall & F1 & Accuracy & Precision & Recall & F1 & Accuracy \\
+        \hline
+        0.853 & 0.871 & 0.862 & 0.857 & 0.842 & 0.858 & 0.85 & 0.843
+    \end{tabular}
+    \label{implementation-q1-partc-chol-metrics}
+\end{table}
+\end{latin}
+
+نتایج مربوط به داده‌های تست و آموزش در جدول \ref{implementation-q1-partc-oldpeak-metrics} با حذف ستون
+\lr{oldpeak} آورده شده است. همان‌طور که مشاهده می‌شود نتایج بر روی داده‌های آموزشی تقریبا ثابت
+باقی مانده است اما این نتایج بر روی داده‌های تست افت داشته است. بنابراین به نظر می‌رسد حذف
+ویژگی \lr{oldpeak} نتایج حاصل شده را کم‌تر تحت تاثیر قرار دهد.
+
+\begin{latin}
+\begin{table}[h]
+    \centering
+    \caption{\rl{نتایج ارزیابی مدل بر روی داده‌های تست و آموزش، سوال یک قسمت ج}}
+    \begin{tabular}{c|c|c|c|c|c|c|c}
+        \multicolumn{4}{c|}{Train} & \multicolumn{4}{|c}{Test} \\
+        \hline
+        Precision & Recall & F1 & Accuracy & Precision & Recall & F1 & Accuracy \\
+        \hline
+        0.858 & 0.85 & 0.854 & 0.851 & 0.833 & 0.801 & 0.817 & 0.814
+    \end{tabular}
+    \label{implementation-q1-partc-oldpeak-metrics}
+\end{table}
+\end{latin}
+
+\section*{سوال دو}
+
+\subsection*{قسمت الف}
+
+مقادیر نامعلوم  موجود در داده‌های آموزش و تست در شکل \ref{q2-missing-values} آمده است.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[scale=0.3]{images/implementation/q2/missing_values.png}
+    \caption{درصد و تعداد مقادیر نامعلوم در هر ستون}
+    \label{q2-missing-values}
+\end{figure}
+
+بر اساس این شکل پیش‌پردازش‌های زیر را برای حذف مقادیر نامعلوم انجام می‌دهیم.
+
+\begin{enumerate}
+    \item حذف ستون \lr{Cabin} در دادگان تست و آموزش. این ستون مقادیر نامعلوم زیادی دارد، اما
+    به نظر می‌رسد که در مدل نهایی اثرگذار نباشد.
+    \item جایگذاری میانگین مقادیر معلوم برای ستون‌های \lr{Age} و \lr{Fare}.
+    \item جایگذاری مد داده‌های معلوم برای ستون \lr{Embarked}.
+\end{enumerate}
+
+بعلاوه موارد بالا ستون‌های \lr{PassengerID}، \lr{Name} و \lr{Ticket} نیز حذف می‌شود.
+علت حذف کردن آن‌ها این است که این ستون‌ها بیشتر جنبه شناسه دارند و در نتیجه دخیل کردن آن‌ها در
+ساخت درخت، باعث می‌شود درخت ساخته شده نتواند به خوبی روی داده تست جوابگو باشد و به نوعی \lr{overfit}
+شود.
+
+\subsection*{قسمت ب و ج}
+
+برای این قسمت ابتدا درخت تصمیم را با استفاده از داده‌های آموزش ساخته و سپس بر روی داده‌های آموزش و
+تست ارزیابی می‌کنیم. نتایج درخت تصمیم بر روی داده‌های آموزشی در فایل \lr{train\_predictions.csv}
+و با استفاده از داده‌های تست در فایل \lr{test\_predictions.csv} ذخیره شده است.
 
 \section*{سوال سه}
 
