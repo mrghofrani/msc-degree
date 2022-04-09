@@ -755,3 +755,4 @@ src/
 *.zip
 *.Identifier
 logs
+2nd_semester/nlp/hw/hw2/data/glove.txt
