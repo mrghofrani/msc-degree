@@ -1,0 +1,113 @@
+\documentclass[12pt, a4paper, openany]{book}
+
+\usepackage{fancyhdr}
+\usepackage[left=4cm, right=4cm, top=4cm, bottom=4cm]{geometry}
+\usepackage[symbol,stable]{footmisc}
+\usepackage[utf8]{inputenc}
+\usepackage[table]{xcolor}
+\usepackage{hyperref}
+\usepackage{multirow}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{enumitem}
+\usepackage{float}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{zref-perpage}
+\usepackage{makecell}
+\usepackage{subcaption}
+\usepackage[justification=centering]{caption}
+\usepackage{xepersian}
+
+\DeclareMathOperator*{\argmax}{argmax}
+\DeclareMathOperator*{\argmin}{argmin}
+\zmakeperpage{footnote}
+\newcolumntype{L}{>{$}l<{$}} % math-mode version of "l" column type
+
+\newcommand{\coursetitle}{شبکه‌های عصبی پیچشی تکه‌ای}
+\newcommand{\doctitle}{کار مطالعاتی شبکه‌های عصبی}
+\newcommand{\name}{محمدرضا غفرانی}
+\newcommand{\studentno}{400131076}
+\newcommand{\todaydate}{\today}
+\renewcommand{\bibname}{منابع و مراجع}
+
+\settextfont{XB Kayhan}
+\setlatintextfont{Times Newer Roman}
+
+\pagestyle{fancy}
+\lhead{\textbf{\doctitle}}
+\chead{\name}
+\rhead{\todaydate}
+
+\begin{document}
+
+\begin{center}
+    \huge
+    \textbf{\coursetitle} \\
+    \vspace{1cm}
+    \LARGE
+    \doctitle \\
+    \vspace{1cm}
+    \large
+    \textbf{\name} \\
+    \studentno \\
+    \todaydate
+\end{center}
+
+% suppress the fancy header on the first page only
+\thispagestyle{plain}
+
+\renewcommand*{\thefootnote}{\arabic{footnote}}
+
+\tableofcontents
+
+\clearpage
+
+\chapter{مقدمه}
+\clearpage
+\input{prolouge}
+
+\chapter{شرح مقالات}
+\clearpage
+
+\input{gated}
+\clearpage
+\input{pos_attension}
+\clearpage
+\input{shared}
+\clearpage
+\input{bert}
+
+\chapter{مجموعه داده}
+\clearpage
+\input{dataset}
+
+\chapter{نتایج}
+\clearpage
+\input{result}
+
+\chapter{جمع‌بندی}
+\clearpage
+
+شبکه‌های کدگذار متفاوتی به منظور‌های مختلف ارائه شده است.
+یکی از این شبکه‌های کدگذار که بیشتر به منظور کدگذاری جملت استفاده می‌شود شبکه عصبی پیچشی چندتکه‌ای
+است. مزیت این شبکه عصبی استخراج ویژگی‌های جمله و ارائه یک بردار با طول ثابت از جمله است.
+
+در این گزارش مرور کوتاهی بر ایده‌های پیشنهادی با هدف بهبود شبکه‌های عصبی پیچشی تکه‌ای انجام شد.
+مختصرا کار‌های انجام شده در دسته‌های کلی بررسی شده و سپس کلیدی‌ترین تحقیقات
+به صورت دقیق‌تر بررسی شد. با توجه به این که این شبکه‌ اکثرا در حوزه استخراج رابطه استفاده می‌شود بنابراین
+مرور کوتاهی بر این حوزه نیز انجام شد.
+
+با مقایسه‌ای که از نتایج حاصل مقالات مطالعه شده داشتیم مشخص شد که در روش‌هایی که پایه
+دسته‌ای از جملات رابطه را یاد می‌گیرند، روش ارائه شده ون و همکاران
+عملکرد بهتری نسبت به دو روش دیگر داشت. همچنین نتایج مدل لیو که در سطح جمله عمل می‌کرد نیز ارائه شد.
+
+گرچه در حال حاضر شبکه پیچشی تکه‌ای در سایر حوزه‌ها کاربرد چندانی ندارد اما به نظر می‌رسد
+ایده مطرح شده توسط آن می‌تواند در حوزه‌های دیگر به تنهایی یا با ترکیب سایر ایده‌ها استفاده شود.
+برای مثال در حوزه تصویر می‌توان تصویر ورودی را به تکه‌هایی تقسیم کرده و پس از انجام عمل کانوولوشن
+ماکزیمم این تکه‌ها را برداشت. چنین کاری می‌تواند عمل تشخیص یک شی در تصویر را راحت‌تر بکند.
+
+\bibliographystyle{ieeetr-fa}
+\bibliography{refrences}
+
+\end{document}
