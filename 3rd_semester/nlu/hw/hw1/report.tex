@@ -1,0 +1,162 @@
+\documentclass[12pt, a4paper]{book}
+
+\usepackage{fancyhdr}
+\usepackage[left=4cm, right=4cm, top=4cm, bottom=4cm]{geometry}
+\usepackage[utf8]{inputenc}
+\usepackage[table]{xcolor}
+\usepackage{hyperref}
+\usepackage{amsmath}
+\usepackage{enumitem}
+\usepackage{graphicx}
+\usepackage{amsfonts}
+\usepackage{booktabs}
+\usepackage{subcaption}
+\usepackage[justification=centering]{caption}
+\usepackage{xepersian}
+
+\DeclareMathOperator*{\argmax}{argmax}
+\DeclareMathOperator*{\argmin}{argmin}
+\newcolumntype{L}{>{$}l<{$}} % math-mode version of "l" column type
+
+\newcommand{\coursetitle}{فهم زبان طبیعی}
+\newcommand{\doctitle}{تمرین اول}
+\newcommand{\name}{محمدرضا غفرانی}
+\newcommand{\studentno}{400131076}
+\newcommand{\todaydate}{\today}
+
+\settextfont{Sahel}
+\setlatintextfont{Times Newer Roman}
+
+\pagestyle{fancy}
+\lhead{\textbf{\doctitle}}
+\chead{\name}
+\rhead{\todaydate}
+
+\begin{document}
+
+\begin{flushleft}
+    \name \\
+    \studentno \\
+    \todaydate
+\end{flushleft}
+
+\begin{center}
+    \huge
+    \textbf{\coursetitle}
+    \break
+    \large
+    \doctitle
+\end{center}
+
+% suppress the fancy header on the first page only
+\thispagestyle{plain}
+
+\section*{ساختار پروژه}
+
+کد‌های پروژه در فایل \lr{code.py} در کنار این فایل ارسال شده است. برای اجرای کد‌ها باید فایل
+\lr{main.py} را اجرا نمود. برای اجرای مدل \lr{transformer} از قطعه کد زیر
+
+\begin{latin}
+    \begin{center}
+        python main.py --train\_dataset <TRAIN\_DATASET> --test\_dataset <TEST\_DATASET> --model transformer
+    \end{center}
+\end{latin}
+
+و برای اجرای کد \lr{encoder-decoder} از قطعه کد زیر استفاده شود.
+
+\begin{latin}
+    \begin{center}
+        python main.py --train\_dataset <TRAIN\_DATASET> --test\_dataset <TEST\_DATASET> --model encoder\_decoder
+    \end{center}
+\end{latin}
+
+باقی تنظیمات مدل با استفاده از دستور \lr{--help} قابل دسترسی است.
+
+\section*{پیش‌پردازش داده‌ها}
+
+با توجه به آن که داده‌های متنی توسط شبکه قابل درک نیستند، ابتدا آن‌ها را به دنباله عددی تبدیل می‌کنیم.
+برای انجام این تبدیل تمامی داده‌های آموزشی را پیمایش کرده و به هر کاراکتر در داده‌های گرافم
+و فونم یک شناسه یکتا نسبت می‌دهیم. در قدم بعد ۳ کاراکتر نیز خود به مجموعه کاراکتر‌های فونم\LTRfootnote{phoneme}
+و گرافم\LTRfootnote{grapheme}
+اضافه کرده و به آن‌ها نیز شناسه یکتا نسبت می‌دهیم. یکی از کاراکتر‌های اضافه‌شده به منظور مشخص کردن
+ابتدای گرافم/فونم، کاراکتر دیگر به منظور مشخص کردن انتهای گرافم/فونم و کاراکتر سوم به منظور مشخص
+کردن پدینگ\LTRfootnote{padding} استفاده می‌شود.
+در ادامه داده‌های آموزشی به نسبت ۸ به ۲ تقسیم شده و به ترتیب برای آموزش و ارزیابی مدل استفاده می‌شود.
+جزئیات بیشتر روند انجام این فرآیند در فایل \lr{data.py} آورده شده است.
+
+\section*{جزئیات شبکه‌های پیاده‌سازی شده}
+
+\subsection*{مدل \lr{Encoder-Decoder}}
+
+این شبکه از دو شبکه بازگشتی \lr{GRU} به عنوان کدگذار و کدگشا
+برای تبدیل \lr{grapheme} به \lr{phoneme} استفاده می‌کند.
+برای بهبود عملکرد این شبکه‌ها از یک لایه توجه نیز استفاده می‌شود. این لایه از آن جا که خروجی‌های کدگذار‌
+در مراحل مختلف را با هم ترکیب کرده و در اختیار قسمت کدگشا قرار می‌دهد، در نتیجه عملکرد مدل را بهبود می‌بخشد.
+برای رسیدن به عملکرد بهتر از شبکه بازگشتی دو جهته برای تولید خروجی کدگذار استفاده می‌کنیم.
+
+در پیاده‌سازی انجام شده اندازه حالت مخفی شبکه \lr{GRU} برابر ۲۵۶ در نظر گرفته شده است. اندازه
+تعبیه هر کاراکتر نیز ۲۵۶ در نظر گرفته شده است. برای جلوگیری از بیش‌برازش از \lr{dropout} با نرخ
+۱۰ درصد استفاده شده است.
+
+\subsection*{مدل \lr{Transformer}}
+
+شبکه ترنسفورمری بر خلاف مدل قبلی حاوی به صورت متوالی عمل نمی‌کند و در نتیجه سریع‌تر عمل می‌کند.
+این مدل تنها از مکانیزم توجه به همراه شبکه‌های جلورو برای تولید خروجی استفاده می‌کند. قسمت کدگذار این
+شبکه از چندین بلوک تشکیل شده است که در هر بلوک ابتدا با استفاده از مکانیزم توجه به خود برای هر گرافم
+تعبیه با کمک تعبیه‌های گرافم‌های مجاور ساخته می‌شود. سپس این بردار‌ها از شبکه جلو‌رو عبور داده می‌شوند.
+اتفاق مشابهی در قسمت کدگشا می‌افتد با این تفاوت که در بین شبکه جلورو و قسمت توجه‌به‌خود، قسمتی برای
+توجه به خروجی‌های کدگذار در نظر گرفته شده است. این قسمت خروجی تمامی کدگذار‌ها دسترسی دارد.
+
+در پیاده‌سازی انجام شده نکات گفته‌شده در بالا رعایت شده است، در بین لایه‌ها در چند نقطه از
+تکنیک \lr{dropout} استفاده شده است تا مدل روی داده‌های آموزشی بیش‌برازش نشود.
+هر یک از قسمت‌های کدگذار و کدگشا حاوی ۸ لایه بلوک کدگذار و کدگشا است.
+سایز لایه مخفی مدل برابر ۱۲۸ در نظر گرفته شده است. قسمت توجه‌به‌خود نیز حاوی
+۸ سرِ توجه است.
+
+\section*{نتایج}
+
+نتایج اجرای مدل در جدول \ref{table2} آورده شده است. در جدول \ref{table1} نیز تعدادی از نمونه‌هایی که برای ارزیابی
+عملکرد مدل استفاده شده به همراه خروجی‌هایی که این مدل‌ها تولید کرده‌اند آورده شده است.
+همان‌طور که مشاهده می‌شود برخلاف انتظار مدل مبتنی بر شبکه بازگشتی عملکرد بهتری نسبت به مدل \lr{Transformer}
+داشته است. هر دو مدل ۱۰ گام آموزش دیده و سپس ارزیابی شده‌اند. از لحاظ تعداد پارامتر‌ها نیز مدل‌ مبتنی بر
+شبکه \lr{Transformer} حدود ۴ میلیون پارامتر دارد، در حالی که شبکه بازگشتی حدود ۲ میلیون پارامتر دارد.
+این نتایج به ازای تعداد پارامتر‌های مختلف نیز تست شده است، و نتیجه مشابهی به دست آمده است.
+در توجیه علت رویداد این اتفاق می‌توان گفت چون طول ورودی کم‌تر است در نتیجه
+مدل‌های بازگشتی با مشکل فراموشی داده‌های اولیه مواجه نشده و در نتیجه توانسته‌اند عملکرد بهتری داشته باشند.
+
+\begin{table}[!ht]
+    \centering
+    \caption{خطای مدل \lr{transformer} و \lr{encoder-decoder}}
+    \label{table2}
+   \begin{tabular}{l|l|l}
+        & خطای کلمه       & خطای واج        \\ \hline
+        \lr{tranformer}      & $0.61$     & $0.17$ \\
+        \lr{encoder-decoder} & $0.45$     & $0.14$ \\
+    \end{tabular}
+\end{table}
+
+
+\begin{latin}
+\begin{table}[!ht]
+    \centering
+    \caption{\rl{جدول عملکرد مدل \lr{Transformer} و \lr{encoder-decoder} برای نمونه‌های ارزیابی}}
+    \label{table1}
+    \begin{tabular}{l|l|l|l}
+        grapheme  & phoneme   & transformer & encoder-decoder \\ \hline
+        \rl{آئینه‌خانه} & 'A'inexAne & 'A'inexAne   & 'A'inexAne       \\
+        \rl{آئین‌نامه‌}  & 'A'innAme  & 'A'innAme    & 'A'innAme        \\
+        \rl{آباده}     & 'AbAde     & 'AbAdee      & 'AbAde           \\
+        \rl{آبتنی}     & 'Abtani    & 'Abtani      & 'Abtani          \\
+        \rl{آبجوسازی}  & 'AbjosAzi  & 'AbjusAzi    & 'AbjusAzi        \\
+        \rl{آبجی}      & 'Abji      & 'Abji        & 'Abeji           \\
+        \rl{آبخوری}    & 'Abxori    & 'Abxori      & 'Abxori          \\
+        \rl{آبدانک}    & 'AbdAnak   & 'AbdAnak     & 'AbdAnak         \\
+        \rl{آبدره}     & 'Abdarre   & 'Abdaree     & 'Abdare          \\
+        \rl{آبدندان}   & 'AbdandAn  & 'AbdandAn    & 'AbdandAn        \\
+    \end{tabular}
+\end{table}
+\end{latin}
+
+
+
+\end{document}
