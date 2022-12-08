@@ -484,22 +484,24 @@ $X_2 \sim B(n, p_2)$ we have $X_1+X_2 \sim B(n, p_1+p_2)$. But the latter doesn'
 The incorrectness of that could be shown with both theoretical approach and simulation.
 Suppose we have two distributions $X_1 \sim B(n, 0.8)$ and $X_2 \sim B(n, 0.7)$. Using the statement
 we can conclude $X_1+X_2 \sim B(n, 0.8+0.7=1.5)$, which is obviously wrong because the probability
-of falling head in the flipping toss can't be greater than one. This was the theoretical
-approval to the incorrectness of the statement. In the following parts we see in computer simulation.
+of falling head in the flipping toss can't be greater than one. But by try and error we
+find out that if $X_1 \sim B(n, p_1)$ and $X_2 \sim B(n, p_2)$ so $X_1 + X_2 \sim B(2n, \frac{p_1+p_2}{2})$.
+In the following parts we see correctness of these in computer simulation.
 
 \begin{itemize}
-    \item $X_1 \sim B(n, p_1), X_2 \sim B(n, p_2) \centernot\implies X_1+X_2 \sim B(n, p_1+p_2)$.
+    \item $X_1 \sim B(n, p_1), X_2 \sim B(n, p_2) \implies X_1+X_2 \sim B(2n, \frac{p_1+p_2}{2})$.
 
-    To show above statement is wrong we draw samples from their corresponding distribution and
+    To show above statement is true we draw samples from their corresponding distribution and
     compare their CDF. \autoref{x1x2_bionomial} shows that CDF of these two distributions
-    doesn't match and so we based on this we can't say that $X_1+X_2$ have bionomial distribution.
-    We also have tried many parameters to show that $X_1+X_2$ have bionomial distribution, but
-    the results was not good.
+    match and so we based on this we can say that $X_1+X_2$ have bionomial distribution.
+    The intuition behind this is that if you have two coins with falling head probablity $p_1$ and
+    $p_2$, respectively, it is reasonable that total probability
+    of falling head be average of the probablity of each coin falling head.
 
     \begin{figure}[h]
         \centering
-        \includegraphics[width=0.6\linewidth]{images/question9/x1x2.png}
-        \caption{comparison of two distributions $X_1+X_2$ (in blue) and $B(1000, 0.3+0.5=0.8)$(in red)}
+        \includegraphics[width=0.6\linewidth]{images/question9/x1x2_corrected.png}
+        \caption{comparison of two distributions $X_1+X_2$ (in blue) and $B(1000+1000, \frac{0.3+0.5}{2})$(in red)}
         \label{x1x2_bionomial}
     \end{figure}
 
